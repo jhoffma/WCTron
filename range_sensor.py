@@ -5,13 +5,13 @@ import paho.mqtt.client as mqtt
 
 distance_sensor_pins = {
   4: {'cabin': 3, 'gender': 'm', 'last_published': False, 'last_status': False, 'counter': 0},
-  8: {'cabin': 4, 'gender': 'm', 'last_published': False, 'last_status': False, 'counter': 0},
+  8: {'cabin': 2, 'gender': 'm', 'last_published': False, 'last_status': False, 'counter': 0},
 }
-treshold = 50
+treshold = 100
 freeLedPin = 5
 busyLedPin = 6
 
-change_state_threshold = 2
+change_state_threshold = 4
 
 digitalWrite(freeLedPin, 1)
 digitalWrite(busyLedPin, 0)
