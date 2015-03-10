@@ -1,8 +1,10 @@
+
 import time
 from grovepi import *
-from range_sensor import distanceCheck
+from range_sensor import *
 from paper_button import paperButton
 from fart_light import fartLight
+
 
 def schedule(interval, callback):
   global schedules
@@ -21,6 +23,8 @@ schedules = {}
 schedule(.3, 'distanceCheck')
 schedule(0.05, 'paperButton')
 schedule(0.5, 'fartLight')
+schedule(1, 'sendStatus')
+
 
 while True:
   run_schedule() 
