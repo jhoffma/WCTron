@@ -24,10 +24,13 @@ def run_schedule():
       schedules[callback]['last'] = current
 
 def checkSound():
-  print analogRead(soundSensor)
-  
+  try:
+    digitalWrite(fartLight, int(analogRead(soundSensor) > 400))
+  except:
+    pass
 
 start=time.time()
+
 schedules = {}
 schedule(.3, 'distanceCheck')
 schedule(0.05, 'paperButton')
@@ -37,6 +40,7 @@ noPaperButton = 3
 newPaperButton = 7
 paperLedPin = 2
 soundSensor = 0
+fartLight = 8
 paperLedStatus = 0
 pinMode(paperLedPin, "OUTPUT")
 pinMode(noPaperButton, "INPUT")
