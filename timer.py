@@ -71,11 +71,11 @@ def process(id, status, row):
 	runSeconds = endTime - beginTime
 	seconds = int(runSeconds) % 60
 	minutes = int(runSeconds / 60)
-        setTextInRow("Srano: " + str(minutes) + "m " + str(seconds) + "s ", row)
+        setTextInRow("Byles:  " + str(minutes) + "m " + str(seconds) + "s", row)
     else:
         seconds = int(runSeconds) % 60
         minutes = int(runSeconds / 60)
-        setTextInRow("Srasz: " + str(minutes) + "m " + str(seconds) + "s ", row)
+        setTextInRow("Jestes: " + str(minutes) + "m " + str(seconds) + "s", row)
 
     client.publish(timerTopic, json.dumps(data))
 
