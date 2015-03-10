@@ -1,22 +1,16 @@
 import person_detector
 from grovepi import *
-<<<<<<< HEAD
-import paho.mqtt.client as mqtt
-=======
 import json
 import paho.mqtt.client as mqtt
-client = mqtt.Client()
-client.connect("localhost", 1883, 60)
->>>>>>> cabin status every 1 second
 
-distance_sensor_pin = 4
+distance_sensor_pins = {
+  4: {'cabin': 3, 'gender': 'm', 'last_published': False, 'last_status': False, 'counter': 0},
+  8: {'cabin': 4, 'gender': 'm', 'last_published': False, 'last_status': False, 'counter': 0},
+}
 treshold = 50
 freeLedPin = 5
 busyLedPin = 6
 
-last_published_status = False
-last_sensor_status = False
-consecutive_change_counter = 0
 change_state_threshold = 8
 
 digitalWrite(freeLedPin, 1)
@@ -32,37 +26,36 @@ publisher.loop_start()
 topic = "WaaS/personDetector"
 
 def distanceCheck():
-  global distance_sensor_pin, treshold, cabinStatus, last_published_status, last_sensor_status, consecutive_change_counter
-  
-  if last_published_status != last_sensor_status:
-    consecutive_change_counter += 1
-    print "Increasing consecutiv state change counter"
-  else:
-    consecutive_change_counter = 0  
+  for pin in distance_sensor_pins.keys():
+    sensor = distance_sensor_pins[pin]
+    if distance_sensor_pins[pin]['last_published'] != distance_sensor_pins[pin]['last_status']:
+      distance_sensor_pins[pin]['counter'] += 1
+      print "Increasing consecutiv state change counter"
+    else:
+      distance_sensor_pins[pin]['counter'] =0
 
-  last_sensor_status = person_detector.isPersonPresent(distance_sensor_pin, treshold)
+    distance_sensor_pins[pin]['last_status'] = person_detector.isPersonPresent(pin, treshold)
 
-<<<<<<< HEAD
-  if consecutive_change_counter == change_state_threshold:
-    consecutive_change_counter = 0
-    print "Publishing sensor status: ", last_sensor_status
-    publisher.publish(topic, last_sensor_status)
-    last_published_status = last_sensor_status
-    digitalWrite(busyLedPin, int(last_published_status))
-    digitalWrite(freeLedPin, 1 - int(last_published_status))
-=======
-  if int(person_detector.isPersonPresent(distance_sensor_pin, treshold)) != cabinStatus:
-    digitalWrite(freeLedPin, cabinStatus)
-    digitalWrite(busyLedPin, 1 - cabinStatus)
-    cabinStatus = 1 - cabinStatus
+    if distance_sensor_pins[pin]['counter'] == change_state_threshold:
+      distance_sensor_pins[pin]['counter'] =0
+      if distance_sensor_pins[pin]['last_status'] == 0:
+        action = 'free'
+      else:
+        action = 'busy'
+      status = {'gender': sensor['gender'], 'action': action, 'id': sensor['cabin'] }
+      publisher.publish(topic, json.dumps(status))
+      print "Publishing sensor status: ", status
+      s = distance_sensor_pins[pin]['last_published'] = distance_sensor_pins[pin]['last_status']
+      digitalWrite(busyLedPin, int(s))
+      digitalWrite(freeLedPin, 1 - int(s))
 
 def sendStatus():
-  global client
-  if cabinStatus == 0:
-    action = 'free'
-  else:
-    action = 'busy'
+  for pin in distance_sensor_pins.keys():
+    sensor = distance_sensor_pins[pin]
+    if sensor['last_published'] == 0:
+      action = 'free'
+    else:
+      action = 'busy'
 
-  status = {'gender': 'm', 'action': action, 'id': 3 }
-  client.publish('WaaS/user', json.dumps(status))
->>>>>>> cabin status every 1 second
+    status = {'gender': sensor['gender'], 'action': action, 'id': sensor['cabin'] }
+    publisher.publish('WaaS/user', json.dumps(status))

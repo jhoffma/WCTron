@@ -22,7 +22,7 @@ start=time.time()
 schedules = {}
 schedule(.3, 'distanceCheck')
 schedule(0.05, 'paperButton')
-schedule(0.5, 'fartLight')
+#schedule(0.5, 'fartLight')
 schedule(1, 'sendStatus')
 
 
