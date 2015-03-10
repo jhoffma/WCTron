@@ -11,7 +11,7 @@ treshold = 50
 freeLedPin = 5
 busyLedPin = 6
 
-change_state_threshold = 8
+change_state_threshold = 2
 
 digitalWrite(freeLedPin, 1)
 digitalWrite(busyLedPin, 0)
