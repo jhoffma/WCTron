@@ -1,13 +1,7 @@
 import time
 from grovepi import *
-import person_detector
-
-def distanceCheck():
-  global cabinStatus
-  if int(person_detector.isPersonPresent(4, 50)) != cabinStatus:
-    digitalWrite(freeLedPin, cabinStatus)
-    digitalWrite(busyLedPin, 1 - cabinStatus)
-    cabinStatus = 1 - cabinStatus
+from range_sensor import distanceCheck
+#from globals import *
 
 def paperButton():
   if digitalRead(noPaperButton) == 1:
@@ -42,17 +36,13 @@ schedule(0.5, 'checkSound')
 noPaperButton = 3
 newPaperButton = 7
 paperLedPin = 2
-freeLedPin = 5
-busyLedPin = 6
 soundSensor = 0
+paperLedStatus = 0
 pinMode(paperLedPin, "OUTPUT")
 pinMode(noPaperButton, "INPUT")
 pinMode(newPaperButton, "INPUT")
 pinMode(soundSensor, "INPUT")
-paperLedStatus = 0
-cabinStatus = 0
 digitalWrite(paperLedPin, paperLedStatus)
-digitalWrite(freeLedPin, 1 - cabinStatus)
 
 while True:
   run_schedule() 
